@@ -1,0 +1,59 @@
+function isEmpty(str) {
+  return (!str || str.length === 0);
+}
+
+function loadReformattedMarkup(markupCanvas, markupData, naturalWidth, naturalHeight, width, height) {
+  var scaleRatio = Math.min(width / naturalWidth, height / naturalHeight);
+  markupCanvas.setDimensions({
+    height: height,
+    width: width,
+  });
+  markupCanvas.setZoom(scaleRatio);
+  markupCanvas.loadFromJSON(markupData, markupCanvas.renderAll.bind(markupCanvas));
+}
+
+function convertCanvasToImage(markupCanvas, appendingId) {
+  if (markupCanvas == null) {
+    $('#status').text('Markup is null');
+    return;
+  }
+  var imageElement = document.createElement("img");
+  imageElement.style = "width: 50%; height: 100%; position: absolute; top: 43px; left:0;";
+  imageElement.src = markupCanvas.toDataURL("image/png");
+  markupCanvas.remove();
+  $(imageElement).insertAfter(appendingId);
+  $(appendingId).remove();
+}
+
+// Function has support for looping through multiple screenshots, but we're
+// only using 1 in this example.
+function setupMarkupOnCanvases(screenshotContainerId) {
+  $(screenshotContainerId).each(function initializeCanvases(index) {
+    var canvasId = index + 1;
+    var canvas = new fabric.StaticCanvas('canvas-' + canvasId);
+    var markupData = {};
+
+    if (!isEmpty($(this).children('.js-markup-data').val())) {
+      markupData = JSON.parse($(this).children('.js-markup-data').val());
+      loadReformattedMarkup(canvas, markupData, $('#canvas-' + canvasId).attr('data-image-width'), $('#canvas-' + canvasId).attr('data-image-height'), $(this).children('#background-img').width(), $(this).children('#background-img').height());
+      convertCanvasToImage(canvas, '#canvas-' + canvasId);
+    }
+  });
+  $('#status').text('setupMarkupOnCanvases() is done!');
+}
+
+// setupMarkupOnCanvases('.js-screenshot-container'); // Uncomment out this line for testing route.
+
+// Setting up the docraptorJavaScriptFinished callback.
+var didWait = false;
+docraptorJavaScriptFinished = function() {
+  if (! didWait) {
+    setTimeout(function(){
+      didWait = true;
+    }, 10000);
+    return false;
+  }
+  setupMarkupOnCanvases('.js-screenshot-container');
+  $('#status').text('docraptorJavaScriptFinished() is done!');
+  return true;
+}

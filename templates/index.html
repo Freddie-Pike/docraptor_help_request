@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="ie=edge">
+		<style>
+			{% include 'helpers/index_css.html' %}
+		</style>
+		<title>Document</title>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+	  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+	  <script src='https://cdnjs.cloudflare.com/ajax/libs/fabric.js/2.4.1/fabric.js' ></script>
+	</head>
+	<body>
+		<h1>Javascipt Update Status: <span id="status"></span></h1>
+		<div class="js-screenshot-container screenshot-container">
+			{% include 'helpers/test_img.html' %}
+			<canvas class="js-screenshot-canvas" id="canvas-1" width="98" height="96" data-image-height="597" data-image-width="723"></canvas>
+			<input class="js-markup-data" type="hidden" value="{{ canvas_drawing }}" id="markup-data-2">
+		</div>
+	</body>
+	<script>
+		{% include 'helpers/index_js.html' %}
+	</script>
+</html>
